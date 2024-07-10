@@ -8,7 +8,7 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { Button, Input, Option, Select } from '@mui/joy';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import style from '@/style/calendar.module.css';
+import style from '@/app/(rotas-auth)/frequencia/calendar.module.css';
 import CalendarService from '@/services/Calendar';
 import { useState } from 'react';
 
