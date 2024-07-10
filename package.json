@@ -1,0 +1,45 @@
+{
+  "name": "base-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@hookform/resolvers": "^3.3.4",
+    "@mui/icons-material": "^5.15.5",
+    "@mui/joy": "^5.0.0-beta.36",
+    "@mui/material": "^5.15.19",
+    "@mui/x-charts": "^7.7.0",
+    "@mui/x-date-pickers": "^7.6.1",
+    "@mui/x-tree-view": "^7.6.1",
+    "@types/node": "20.11.5",
+    "@types/react": "18.2.48",
+    "@types/react-dom": "18.2.18",
+    "axios": "^1.6.5",
+    "dayjs": "^1.11.11",
+    "eslint": "8.56.0",
+    "eslint-config-next": "14.1.0",
+    "json2csv": "^6.0.0-alpha.2",
+    "jwt-decode": "^4.0.0",
+    "next": "^14.1.0",
+    "next-auth": "^4.24.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-hook-form": "^7.49.3",
+    "react-imask": "^7.3.0",
+    "react-input-mask": "^2.0.4",
+    "typescript": "5.3.3",
+    "xlsx": "^0.18.5",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/json2csv": "^5.0.7",
+    "@types/react-input-mask": "^3.0.5"
+  }
+}

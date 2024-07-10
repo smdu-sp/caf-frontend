@@ -1,0 +1,48 @@
+.filter {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filter_left {
+    width: 80%;
+}
+
+.datapicker {
+    width: 100%;
+}
+
+.form {
+    width: 50%;
+    align-items: center;
+}
+
+.calendar {
+    margin: 0;
+    align-items: center;
+}
+
+.button_event {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.select_event {
+    margin-top: 10px;
+}
+
+.search {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.s_button {
+    width: 25%;   
+}
+
+.input {
+    width: 70%;
+    margin-right: 5%;
+}

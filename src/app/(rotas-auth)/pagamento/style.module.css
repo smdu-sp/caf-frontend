@@ -1,0 +1,93 @@
+.filter {
+    display: flex;
+    flex-direction: Row;
+    margin-bottom: 2%;
+}
+
+.select {
+    width: 40%;
+    margin-right:5%;
+}
+
+.input {
+    width: 40%;
+    margin-right: 5%;
+}
+
+.button {
+    width: 10%;
+    margin-bottom: 2%;
+}
+
+.filter {
+    display: flex;
+    flex-direction: Row;
+    margin-bottom: 2%;
+}
+
+.select {
+    width: 40%;
+    margin-right:5%;
+}
+
+.input {
+    width: 40%;
+    margin-right: 5%;
+}
+
+.button {
+    width: 10%;
+}
+
+.table {
+    max-height: 50vh !important;
+    overflow: auto;
+}
+
+.table::-webkit-scrollbar {
+    width: 10px; /* Width of the scrollbar */
+}
+
+.table::-webkit-scrollbar-track {
+    background: none; /* Color of the scrollbar track */
+}
+
+.table::-webkit-scrollbar-thumb {
+    background: #888; /* Color of the scrollbar handle */
+    border-radius: 5px; /* Rounded corners for the scrollbar handle */
+}
+
+.table::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color of the scrollbar handle on hover */
+}
+
+.functionalities {
+    margin-bottom: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.download_select {
+    display: flex;
+    flex-direction: row;
+    height: 50%;
+    flex-wrap: wrap;
+    align-content: center;
+}
+
+.select_input {
+    width: 100%;
+}   
+    
+.select_column {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.filterContent {
+    width: 100%;
+}
