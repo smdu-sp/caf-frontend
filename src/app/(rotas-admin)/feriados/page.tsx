@@ -7,9 +7,11 @@ import { Box, Button, Chip, ChipPropsColorOverrides, ColorPaletteProp, FormContr
 import { TablePagination } from "@mui/material";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { use, useCallback, useContext, useEffect, useState } from "react";
 import { OverridableStringUnion } from '@mui/types';
 import ModalFeriado from "@/components/ModalFeriado";
+import * as FeriadoService from "@/services/Feriados";
+import { IFeriado } from "@/services/Feriados"
 
 export default function Feriados() {
     const searchParams = useSearchParams();
@@ -20,9 +22,17 @@ export default function Feriados() {
     const [total, setTotal] = useState(searchParams.get('total') ? Number(searchParams.get('total')) : 1);
     const [status, setStatus] = useState(searchParams.get('status') ? Number(searchParams.get('status')) : 1);
     const [busca, setBusca] = useState(searchParams.get('busca') || '');
-    const [filtro, setFiltro] = useState(searchParams.get('filtro') || '');
-    const [tipo, setTipo] = useState('');
+    const [filtro, setFiltro] = useState(0);
+    const [values, setValues] = useState<IFeriado[]>([])
+    const [ano, setAno] = useState('')
+    const [tipo, setTipo] = useState(1);
+    const [inicio, setInicio] = useState<Date>(new Date())
+    const [fim, setFim] = useState<Date>(new Date())
     const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        buscaFeriados("2024");
+    }, []);
 
     const confirmaVazio: {
         aberto: boolean,
@@ -74,6 +84,27 @@ export default function Feriados() {
         setLimite(parseInt(event.target.value, 10));
         setPagina(1);
     };
+
+    const buscaFeriados = async (ano: string) => {
+        FeriadoService.buscarPorAno(ano)
+            .then((response) => {
+                setValues(response)
+            })
+    }
+
+    const buscaData = async (data1: string) => {
+        FeriadoService.buscarData(data1)
+            .then((response) => {
+                setValues(response)
+            })
+    }
+
+    const buscaPeriodo = async (data1: string, data2?: string) => {
+        FeriadoService.buscarPeriodo(data1, data2 ? data2 : "")
+            .then((response) => {
+                setValues(response)
+            })
+    }
 
 
     return (
@@ -132,26 +163,72 @@ export default function Feriados() {
                     <Select
                         size="sm"
                         value={filtro}
-                        onChange={(_, newValue) => {
-                            router.push(pathname + '?' + createQueryString('filtro', newValue! || ''));
-                            setFiltro(newValue! || '');
-                        }}
+                        onChange={(_, v) => setFiltro(v ? v : 0)}
                     >
                         <Option value={1}>Ano</Option>
                         <Option value={2}>Período</Option>
-                        <Option value={3}>Inativos</Option>
-                        <Option value={4}>Tudo</Option>
+                        <Option value={3}>Data</Option>
+                        <Option value={4}>Inativos</Option>
+                        <Option value={5}>Tudo</Option>
                     </Select>
                 </FormControl>
+                {filtro === 1 ?
+                    <FormControl sx={{ flex: 0.1 }} size="sm">
+                        <FormLabel>Ano: </FormLabel>
+                        <Input
+                            startDecorator={<Search fontSize='small' />}
+                            type="number"
+                            value={ano}
+                            onChange={(event) => setAno(event.target.value)}
+                            onKeyDown={event => {
+                                if (event.key === 'Enter') {
+                                    buscaFeriados(ano)
+                                }
+                            }}
+                        />
+                    </FormControl>
+                    : null
+                }
+                {filtro === 2 || filtro === 3 ?
+                    <>
+                        <FormControl sx={{ flex: 0.1 }} size="sm">
+                            <FormLabel>Inicio: </FormLabel>
+                            <Input
+                                type="date"
+                                value={inicio.toISOString().split('T')[0]}
+                                onChange={(event) => setInicio(new Date(event.target.value))}
+                            />
+                        </FormControl>
+                        {filtro === 2 &&
+                            <FormControl sx={{ flex: 0.1 }} size="sm">
+                                <FormLabel>Fim: </FormLabel>
+                                <Input
+                                    type="date"
+                                    value={fim.toISOString().split('T')[0]}
+                                    onChange={(event) => setFim(new Date(event.target.value))}
+                                />
+                            </FormControl>
+                        }
+                        <IconButton
+                            variant="plain"
+                            size="sm"
+                            onClick={() => {
+                                filtro === 2 ? buscaPeriodo(inicio.toISOString().split('T')[0], fim.toISOString().split('T')[0])
+                                : buscaData(inicio.toISOString().split('T')[0])
+                            }}>
+                            <Search />
+                        </IconButton>
+                    </>
+
+                    : null
+                }
+
                 <FormControl size="sm">
                     <FormLabel>Tipo: </FormLabel>
                     <Select
                         size="sm"
                         value={tipo}
-                        onChange={(_, newValue) => {
-                            router.push(pathname + '?' + createQueryString('tipo', newValue! || ''));
-                            setTipo(newValue! || '');
-                        }}
+                        onChange={(_, v) => setTipo(v ? v : 0)}
                     >
                         <Option value={1}>Feriados</Option>
                         <Option value={2}>Recorrentes</Option>
@@ -181,19 +258,24 @@ export default function Feriados() {
                         <th>Nível</th>
                         <th>Modo</th>
                         <th>Descrição</th>
-                        <th>Status</th>
                         <th style={{ textAlign: 'right' }}></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <td>Natal</td>
-                    <td>25/12/2024</td>
-                    <td>Feriado</td>
-                    <td>Nacional</td>
-                    <td>Recorrente</td>
-                    <td>Teste</td>
-                    <td><Chip color="success">Ativo</Chip></td>
-                    <td><IconButton variant="soft" size="sm" color="success"><Check /></IconButton></td>
+                    {values && values.length > 0 ? values.map((feriado) => (
+                        <tr key={feriado.id}>
+                            <td>{feriado.nome}</td>
+                            <td>{new Date(feriado.data).toISOString().split("T")[0].split("-").reverse().join("/")}</td>
+                            <td>{feriado.tipo}</td>
+                            <td>{feriado.nivel}</td>
+                            <td>{feriado.modo === 1 ? "Não Recorrente" : "Recorrente"}</td>
+                            <td>{feriado.descricao}</td>
+                            <td><IconButton color={feriado.status === 1 ? 'success' : 'danger'} variant="soft">
+                                {feriado.status === 1 ? <Check /> : <Cancel />}
+                            </IconButton>
+                            </td>
+                        </tr>
+                    )) : <tr><td colSpan={4}>Nenhum Feriado encontrado</td></tr>}
                 </tbody>
             </Table>
             {(total && total > 0) ? <TablePagination
