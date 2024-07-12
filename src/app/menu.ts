@@ -1,4 +1,4 @@
-import { CalendarMonth, Home, Person, Payments } from '@mui/icons-material';
+import { CalendarMonth, Home, Person, Payments, Event } from '@mui/icons-material';
 
 export interface IMenuOption {
     title:  string;
@@ -34,6 +34,12 @@ export const menu: IMenu = {
             href: '/usuarios',
             name: 'usuarios',
             icon: Person,
+        },
+        {
+            title: 'Feriados',
+            href: '/feriados',
+            name: 'feriados',
+            icon: Event,
         },
         {
             title: 'Frequência',
