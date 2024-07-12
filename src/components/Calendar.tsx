@@ -72,6 +72,7 @@ const ServerDay = (props: PickersDayProps<Dayjs> & { highlightedDays?: Dayjs[], 
 
 export default function Calendar() {
   const [filter, setFilter] = useState<EventType>(EventType.Present);
+  const [eventType, setEventType] = useState<EventType>(EventType.Present);
   const [searchId, setSearchId] = useState<string>('');
   const [employee, setEmployee] = useState<Employee>();
   const [highlightedDays, setHighlightedDays] = useState<Dayjs[]>([]);
@@ -147,10 +148,25 @@ export default function Calendar() {
   }
 
   // Adicionar evento na lista de eventos
-  function addEvent(){
-    const response: Event[] = [];
-    employee?.events 
-    console.log(selectedDate)
+  function addEvent() {
+    if (employee && selectedDate) {
+      const newEvent: Event = { day: selectedDate.format('DD/MM/YYYY'), type: eventType };
+      const updatedEvents = [...list, newEvent];
+      setList(updatedEvents);
+      setEmployee({ ...employee, events: [...employee.events, newEvent] });
+      updateHighlightedDays(updatedEvents, filter);
+    }
+  }
+
+  // Remover evento da lista de eventos
+  function removeEvent() {
+    if (employee && selectedDate) {
+      const eventToRemove = selectedDate.format('DD/MM/YYYY');
+      const updatedEvents = list.filter(event => !(event.day === eventToRemove && event.type === eventType));
+      setList(updatedEvents);
+      setEmployee({ ...employee, events: updatedEvents });
+      updateHighlightedDays(updatedEvents, filter);
+    }
   }
 
   // Função para lidar com a mudança de data no DateCalendar
@@ -191,14 +207,19 @@ export default function Calendar() {
             value={selectedDate}
             onChange={handleDateChange} 
           />
-          <Select defaultValue={EventType.Present} className={style.select_event}>
+          <Select value={eventType} onChange={(event, value) => setEventType(value as EventType)} className={style.select_event}>
             <Option value={EventType.Present}>Presente 🔵</Option>
             <Option value={EventType.Absence}>Falta 🟠</Option>
             <Option value={EventType.Unjustified}>Falta Injustificada 🔴</Option>
           </Select>
-          <Button className={style.button_event} onClick={addEvent}>
-            Adicionar Evento
-          </Button>
+          <div className={style.buttons}>
+            <Button className={style.button_event} onClick={addEvent}>
+              Adicionar Evento
+            </Button>
+            <Button className={style.button_event} onClick={removeEvent}>
+              Remover Evento
+            </Button>
+          </div>
         </LocalizationProvider>
       </div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
