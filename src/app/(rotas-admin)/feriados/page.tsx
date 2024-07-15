@@ -32,7 +32,8 @@ export default function Feriados() {
 
     useEffect(() => {
         buscaFeriados("2024");
-    }, []);
+        filtro === 5 && buscaTudo();
+    }, [filtro]);
 
     const confirmaVazio: {
         aberto: boolean,
@@ -94,6 +95,12 @@ export default function Feriados() {
 
     const buscaData = async (data1: string) => {
         FeriadoService.buscarData(data1)
+            .then((response) => {
+                setValues(response)
+            })
+    }
+    const buscaTudo = async () => {
+        FeriadoService.buscarTudo()
             .then((response) => {
                 setValues(response)
             })

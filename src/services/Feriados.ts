@@ -72,8 +72,24 @@ async function buscarPeriodo(data1: string, data2: string){
     return reunoes;
 }
 
+async function buscarTudo(){
+    const session = await getServerSession(authOptions);
+    const reunoes = await fetch(`${baseURL}feriados/buscar`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.access_token}`
+        }
+    }).then((response) => {
+        if (response.status === 401) Logout();
+        return response.json();
+    })
+    return reunoes;
+}
+
 export {
     buscarPorAno,
     buscarData,
-    buscarPeriodo
+    buscarPeriodo,
+    buscarTudo
 }
