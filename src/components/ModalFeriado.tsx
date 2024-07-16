@@ -9,6 +9,7 @@ import DialogTitle from '@mui/joy/DialogTitle';
 import DialogContent from '@mui/joy/DialogContent';
 import Grid from '@mui/joy/Grid';
 import { Option, Select, Textarea } from '@mui/joy';
+import * as FerriadosServices from '@/services/Feriados'
 import { useState } from 'react';
 
 interface ModalProps {
@@ -16,6 +17,7 @@ interface ModalProps {
     subTitulo: string;
     open: boolean;
     setOpen: (open: boolean) => void;
+    id?: string
 }
 
 export default function BasicModalDialog(props: ModalProps) {
@@ -31,6 +33,12 @@ export default function BasicModalDialog(props: ModalProps) {
     e.preventDefault();
     console.log({ name, date, tipo, nivel, status, modo, descricao });
   }
+
+  // React.useEffect(() => {
+  //   if (props.id) {
+  //     FerriadosServices.
+  //   }
+  // }, [])
 
   return (
     <Modal open={props.open} onClose={() => props.setOpen(false)}>
