@@ -20,6 +20,13 @@ export interface IFeriado {
     descricao?: String;
 }
 
+export interface IFeriadoPaginado {
+    data: IFeriado[];
+    total: number;
+    pagina: number;
+    limite: number;
+}
+
 export interface ICriarFeriado extends Partial<IFeriado> {}
 
 export interface IAtualizarFerido extends Partial<ICriarFeriado> {}
@@ -87,9 +94,57 @@ async function buscarTudo(){
     return reunoes;
 }
 
+async function buscarFeriadosInativos(){
+    const session = await getServerSession(authOptions);
+    const reunoes = await fetch(`${baseURL}feriados/feriados-inativos`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.access_token}`
+        }
+    }).then((response) => {
+        if (response.status === 401) Logout();
+        return response.json();
+    })
+    return reunoes;
+}
+
+async function buscarFeriadosRecorrentes() {
+    const session = await getServerSession(authOptions);
+    const reunoes = await fetch(`${baseURL}feriados/recorrentes`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.access_token}`
+        }
+    }).then((response) => {
+        if (response.status === 401) Logout();
+        return response.json();
+    })
+    return reunoes;
+}
+
+async function buscar(status: string, pagina: number, limite: number, busca: string): Promise<IFeriadoPaginado> {
+    const session = await getServerSession(authOptions);
+    const subprefeituras = await fetch(`http://localhost:3003/feriados/buscarTudo?status=${status}&pagina=${pagina}&limite=${limite}&busca=${busca}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.access_token}`
+        }
+    }).then((response) => {
+        if (response.status === 401) Logout();
+        return response.json();
+    })
+    return subprefeituras;
+}
+
 export {
     buscarPorAno,
     buscarData,
     buscarPeriodo,
-    buscarTudo
+    buscarTudo,
+    buscarFeriadosInativos,
+    buscarFeriadosRecorrentes,
+    buscar
 }
