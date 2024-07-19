@@ -11,34 +11,37 @@ import Grid from '@mui/joy/Grid';
 import { Option, Select, Textarea } from '@mui/joy';
 import * as FerriadosServices from '@/services/Feriados'
 import { useState } from 'react';
+import * as FeriadoService from "@/services/Feriados";
+import { AlertsContext } from '@/providers/alertsProvider';
+import { Check } from '@mui/icons-material';
 
 interface ModalProps {
     titulo: string;
     subTitulo: string;
     open: boolean;
     setOpen: (open: boolean) => void;
-    id?: string
+    id?: string;
+    buscaFeriado: any;
 }
 
 export default function BasicModalDialog(props: ModalProps) {
-  const [name, setName] = useState<string>('');
-  const [date, setDate] = useState<string>('');
-  const [tipo, setTipo] = useState<number>(0);
-  const [nivel, setNivel] = useState<number>(0);
+
+  const [nome, setNome] = useState<string>('');
+  const [data, setData] = useState<Date>(new Date());
+  const [tipo, setTipo] = useState("");
+  const [nivel, setNivel] = useState("");
   const [status, setStatus] = useState<number>(0);
   const [modo, setModo] = useState<number>(0);
   const [descricao, setDescricao] = useState<string>('');
+  const { setAlert } = React.useContext(AlertsContext);
 
   function cadastrarFeriado(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log({ name, date, tipo, nivel, status, modo, descricao });
+    FeriadoService.criar(nome, data, tipo, nivel, status, modo, descricao);
+    props.buscaFeriado();
+    props.setOpen(false);
+    setAlert('Feriado Criado!', `${tipo} registrado com sucesso`, 'success', 3000, Check);
   }
-
-  // React.useEffect(() => {
-  //   if (props.id) {
-  //     FerriadosServices.
-  //   }
-  // }, [])
 
   return (
     <Modal open={props.open} onClose={() => props.setOpen(false)}>
@@ -50,31 +53,31 @@ export default function BasicModalDialog(props: ModalProps) {
             <Grid xs={12} sm={6}>
               <FormControl>
                 <FormLabel>Name</FormLabel>
-                <Input type='text' name='name' value={name} onChange={(e) => setName(e.target.value)} required />
+                <Input type='text' name='name' value={nome} onChange={(e) => setNome(e.target.value)} required />
               </FormControl>
             </Grid>
             <Grid xs={12} sm={6}>
               <FormControl>
                 <FormLabel>Data</FormLabel>
-                <Input type="date" name='date' value={date} onChange={(e) => setDate(e.target.value)} required />
+                <Input type="date" name='date' value={data.toISOString().split("T")[0]} onChange={(e) => setData(new Date(e.target.value))} required />
               </FormControl>
             </Grid>
             <Grid xs={12} sm={6}>
               <FormControl>
                 <FormLabel>Tipo</FormLabel>
-                <Select name='tipo' value={tipo} onChange={(_, v) => setTipo(v ? v : 0)}>
-                  <Option value={0}>Feriado</Option>
-                  <Option value={1}>Ponto Facultativo</Option>
+                <Select name='tipo' value={tipo} onChange={(_, v) => setTipo(v ? v : "")}>
+                  <Option value="Feriado">Feriado</Option>
+                  <Option value="Ponto Facultativo">Ponto Facultativo</Option>
                 </Select>
               </FormControl>
             </Grid>
             <Grid xs={12} sm={6}>
               <FormControl>
                 <FormLabel>Nivel</FormLabel>
-                <Select name='nivel' value={nivel} onChange={(_, v) => setNivel(v ? v : 0)}>
-                  <Option value={0}>Nacional</Option>
-                  <Option value={1}>Estadual</Option>
-                  <Option value={2}>Municipal</Option>
+                <Select name='nivel' value={nivel} onChange={(_, v) => setNivel(v ? v : "")}>
+                  <Option value="Nacional">Nacional</Option>
+                  <Option value="Estadual">Estadual</Option>
+                  <Option value="Municipal">Municipal</Option>
                 </Select>
               </FormControl>
             </Grid>
