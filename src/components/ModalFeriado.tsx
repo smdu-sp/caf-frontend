@@ -16,12 +16,12 @@ import { AlertsContext } from '@/providers/alertsProvider';
 import { Check } from '@mui/icons-material';
 
 interface ModalProps {
-    titulo: string;
-    subTitulo: string;
-    open: boolean;
-    setOpen: (open: boolean) => void;
-    id?: string;
-    buscaFeriado: any;
+  titulo: string;
+  subTitulo: string;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  id?: string;
+  buscaFeriado: any;
 }
 
 export default function BasicModalDialog(props: ModalProps) {
@@ -37,10 +37,19 @@ export default function BasicModalDialog(props: ModalProps) {
 
   function cadastrarFeriado(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    FeriadoService.criar(nome, data, tipo, nivel, status, modo, descricao);
-    props.buscaFeriado();
-    props.setOpen(false);
-    setAlert('Feriado Criado!', `${tipo} registrado com sucesso`, 'success', 3000, Check);
+    FeriadoService.verica(data.toISOString())
+      .then((response) => {
+        if (response === true) {
+          setAlert('Data Indisponivel', `Esta data já esta relacioanda a outro feriado`, 'danger', 3000, Check);
+          props.setOpen(true);
+          return;
+        } else {
+          FeriadoService.criar(nome, data, tipo, nivel, status, modo, descricao);
+          props.buscaFeriado();
+          props.setOpen(false);
+          setAlert('Feriado Criado!', `${tipo} registrado com sucesso`, 'success', 3000, Check);
+        }
+      })
   }
 
   return (
@@ -94,8 +103,8 @@ export default function BasicModalDialog(props: ModalProps) {
               <FormControl>
                 <FormLabel>Modo</FormLabel>
                 <Select name='modo' value={modo} onChange={(_, v) => setModo(v ? v : 0)}>
-                  <Option value={0}>Não recorrente</Option>
-                  <Option value={1}>Recorrente</Option>
+                  <Option value={1}>Não recorrente</Option>
+                  <Option value={0}>Recorrente</Option>
                 </Select>
               </FormControl>
             </Grid>

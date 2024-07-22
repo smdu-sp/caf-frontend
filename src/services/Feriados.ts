@@ -164,6 +164,21 @@ async function buscarFeriadosRecorrentes(pagina: number, limite: number, buscar?
     return reunoes;
 }
 
+async function verica(data: string) {
+    const session = await getServerSession(authOptions);
+    const reunoes = await fetch(`${baseURL}data/${data}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.access_token}`
+        }
+    }).then((response) => {
+        if (response.status === 401) Logout();
+        return response.json();
+    })
+    return reunoes;
+}
+
 async function buscar(status: string, pagina: number, limite: number, busca: string): Promise<IFeriadoPaginado> {
     const session = await getServerSession(authOptions);
     const subprefeituras = await fetch(`${baseURL}buscarTudo?status=${status}&pagina=${pagina}&limite=${limite}&busca=${busca}`, {
@@ -208,5 +223,6 @@ export {
     buscar,
     criar,
     alterarFeriado,
-    alterarFeriadoRecorrente
+    alterarFeriadoRecorrente,
+    verica
 }
