@@ -17,7 +17,7 @@ export interface IFeriado {
     nivel: string;
     status: number;
     modo: number;
-    descricao?: String;
+    descricao?: string;
 }
 
 export interface IFeriadoCriar {
@@ -27,7 +27,7 @@ export interface IFeriadoCriar {
     nivel: string;
     status: number;
     modo: number;
-    descricao?: String;
+    descricao?: string;
 }
 
 export interface IFeriadoPaginado {
@@ -212,6 +212,39 @@ async function criar(nome: string, data: Date, tipo: string, nivel: string, stat
     return subprefeituras;
 }
 
+async function buscarUnico(id: string, modo: number): Promise<IFeriado> {
+    const session = await getServerSession(authOptions);
+    const subprefeituras = await fetch(`${baseURL}buscar/${id}?modo=${1}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.access_token}`
+        }
+    }).then((response) => {
+        if (response.status === 401) Logout();
+        return response.json();
+    })
+    return subprefeituras;
+}
+
+async function atualizar(id: string, nome: string, data: Date, tipo: string, nivel: string, status: number, modo: number, descricao?: string, modoFeriado?: number): Promise<IAtualizarFerido> {
+    const session = await getServerSession(authOptions);
+    const subprefeituras = await fetch(`${baseURL}atualizar/${id}?modo${modoFeriado}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.access_token}`
+        },
+        body: JSON.stringify({
+        nome, data, tipo, nivel, status, modo, descricao
+        })
+    }).then((response) => {
+        if (response.status === 401) Logout();
+        return response.json();
+    })
+    return subprefeituras;
+}
+
 
 export {
     buscarPorAno,
@@ -224,5 +257,7 @@ export {
     criar,
     alterarFeriado,
     alterarFeriadoRecorrente,
-    verica
+    verica,
+    buscarUnico,
+    atualizar
 }

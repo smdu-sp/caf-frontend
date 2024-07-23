@@ -30,6 +30,7 @@ export default function Feriados() {
     const [status, setStatus] = useState(0)
     const [id, setId] = useState('');
     const [openComfirm, setOpenComfirm] = useState(false);
+    const [modo, setModo] = useState(0)
 
 
     useEffect(() => {
@@ -38,7 +39,8 @@ export default function Feriados() {
 
     useEffect(() => {
         tipo === 2 && buscarFeriadosRecorrentes()
-    }, [status]);
+        setModo(tipo)
+    }, [status, tipo]);
 
 
     const confirmaVazio: {
@@ -83,7 +85,7 @@ export default function Feriados() {
     };
 
     const buscaFeriados = async (ano: number) => {
-        FeriadoService.buscarPorAno(ano.toString(), pagina, limite, busca, status)
+        await FeriadoService.buscarPorAno(ano.toString(), pagina, limite, busca, status)
             .then((response: IFeriadoPaginado) => {
                 setTotal(response.total);
                 setPagina(response.pagina);
@@ -93,7 +95,7 @@ export default function Feriados() {
     }
 
     const buscaData = async (data1: string) => {
-        FeriadoService.buscarData(data1, pagina, limite, total)
+        await FeriadoService.buscarData(data1, pagina, limite, total)
             .then((response: IFeriadoPaginado) => {
                 setTotal(response.total);
                 setPagina(response.pagina);
@@ -102,7 +104,7 @@ export default function Feriados() {
             });
     }
     const buscaTudo = async (status: number) => {
-        FeriadoService.buscarTudo(pagina, limite, busca, status)
+        await FeriadoService.buscarTudo(pagina, limite, busca, status)
             .then((response: IFeriadoPaginado) => {
                 setTotal(response.total);
                 setPagina(response.pagina);
@@ -112,17 +114,7 @@ export default function Feriados() {
     }
 
     const buscaPeriodo = async (data1: string, data2?: string) => {
-        FeriadoService.buscarPeriodo(data1, data2 ? data2 : "", pagina, limite, busca)
-            .then((response: IFeriadoPaginado) => {
-                setTotal(response.total);
-                setPagina(response.pagina);
-                setLimite(response.limite);
-                setValues(response.data);
-            });
-    }
-
-    const buscarFeriadosInativos = async () => {
-        FeriadoService.buscarFeriadosInativos()
+        await FeriadoService.buscarPeriodo(data1, data2 ? data2 : "", pagina, limite, busca)
             .then((response: IFeriadoPaginado) => {
                 setTotal(response.total);
                 setPagina(response.pagina);
@@ -132,13 +124,18 @@ export default function Feriados() {
     }
 
     const buscarFeriadosRecorrentes = async () => {
-        FeriadoService.buscarFeriadosRecorrentes(pagina, limite, busca, status)
+        await FeriadoService.buscarFeriadosRecorrentes(pagina, limite, busca, status)
             .then((response: IFeriadoPaginado) => {
                 setTotal(response.total);
                 setPagina(response.pagina);
                 setLimite(response.limite);
                 setValues(response.data);
             });
+    }
+
+    const alterar = () => {
+        setOpen(true)
+
     }
 
     return (
@@ -164,9 +161,10 @@ export default function Feriados() {
                     <Typography sx={{ mt: 1, mb: 2 }} level="title-md">Deseja alterar este feriado?</Typography>
                     <Stack direction="row" spacing={1}>
                         <Button variant="solid" color="primary" onClick={() => {
-                            tipo === 1 ? FeriadoService.alterarFeriado(id) : FeriadoService.alterarFeriadoRecorrente(id); 
+                            tipo === 1 ? FeriadoService.alterarFeriado(id) : FeriadoService.alterarFeriadoRecorrente(id);
                             tipo === 1 ? buscaFeriados(ano) : buscarFeriadosRecorrentes();
-                        setOpenComfirm(false)}}>
+                            setOpenComfirm(false)
+                        }}>
                             Sim
                         </Button>
                         <Button
@@ -293,9 +291,9 @@ export default function Feriados() {
                     <Select
                         size="sm"
                         value={tipo}
-                        onChange={(_, v) => setTipo(v ? v : 0)}
+                        onChange={(_, v) => {setTipo(v ? v : 0); setModo(v ? v : 0)}}
                     >
-                        <Option value={1} onClick={() => { setFiltro(1); buscaFeriados(ano) }}>Feriados</Option>
+                        <Option value={1} onClick={() => { setFiltro(1); buscaFeriados(ano)}}>Feriados</Option>
                         <Option value={2} onClick={() => { setFiltro(0); buscarFeriadosRecorrentes() }}>Recorrentes</Option>
                     </Select>
                 </FormControl>
@@ -327,15 +325,15 @@ export default function Feriados() {
                 </thead>
                 <tbody>
                     {values && values.length > 0 ? values.map((feriado) => (
-                        <tr key={feriado.id}>
-                            <td>{feriado.nome}</td>
-                            <td>{new Date(feriado.data).toISOString().split("T")[0].split("-").reverse().join("/")}</td>
-                            <td>{feriado.tipo}</td>
-                            <td>{feriado.nivel}</td>
-                            <td>{feriado.modo === 1 ? "Não Recorrente" : "Recorrente"}</td>
-                            <td>{feriado.descricao}</td>
+                        <tr key={feriado.id} style={{ cursor: 'pointer' }}>
+                            <td onClick={() => { setOpen(true); setId(feriado.id); setModo(tipo) }}>{feriado.nome}</td>
+                            <td onClick={() => { setOpen(true); setId(feriado.id); setModo(tipo) }}>{new Date(feriado.data).toISOString().split("T")[0].split("-").reverse().join("/")}</td>
+                            <td onClick={() => { setOpen(true); setId(feriado.id); setModo(tipo) }}>{feriado.tipo}</td>
+                            <td onClick={() => { setOpen(true); setId(feriado.id); setModo(tipo) }}>{feriado.nivel}</td>
+                            <td onClick={() => { setOpen(true); setId(feriado.id); setModo(tipo) }}>{feriado.modo === 1 ? "Não Recorrente" : "Recorrente"}</td>
+                            <td onClick={() => { setOpen(true); setId(feriado.id); setModo(tipo) }}>{feriado.descricao}</td>
                             <td>
-                                <IconButton color={feriado.status === 0 ? 'success' : 'danger'} onClick={() => {setOpenComfirm(true); setId(feriado.id)}} variant="soft">
+                                <IconButton color={feriado.status === 0 ? 'success' : 'danger'} onClick={() => { setOpenComfirm(true); setId(feriado.id) }} variant="soft">
                                     {feriado.status === 0 ? <Check /> : <Cancel />}
                                 </IconButton>
                             </td>
@@ -365,6 +363,8 @@ export default function Feriados() {
                 subTitulo="Preencha os dados abaixo:"
                 setOpen={() => setOpen(!open)}
                 buscaFeriado={() => buscaFeriados(ano)}
+                id={id}
+                modo={modo}
             />
         </Content>
     )
