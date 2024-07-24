@@ -8,7 +8,7 @@ export default function Frequencia (){
   return (
     <>
       <Content
-        titulo='Página de frquência'
+        titulo='Página de frequência'
         pagina='/frequencia'
       >
         <Calendar></Calendar>

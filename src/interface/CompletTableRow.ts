@@ -6,7 +6,7 @@ export default interface CompleteTableRow {
     sexo: string;
     racaCor: string;
     grupoSanguineo?: string;
-    dataNascimento: string;
+    dataNascimento: Date;
     pais: string;
     possuidorDeficiencia: boolean;
     tipoDeficiencia?: string;
@@ -18,7 +18,7 @@ export default interface CompleteTableRow {
     numIdentidadeProfissional?: string;
     conselhoIdentidadeProfissional?: string;
     profissaoIdentidadeProfissional?: string;
-    dataExpedicaoIdentidadeProfissional?: string;
+    dataExpedicaoIdentidadeProfissional?: Date;
     especificacaoFormacao?: string;
     anoChegadaBrasil?: number;
     anoPrimeiroEmprego?: number;
@@ -27,19 +27,19 @@ export default interface CompleteTableRow {
     cargoFuncao: string;
     referenciaCargoFuncao: string;
     provimentoCargoFuncao: string;
-    dataInicioCargoFuncao: string;
-    dataExoneracaoCargoFuncao?: string;
+    dataInicioCargoFuncao: Date;
+    dataExoneracaoCargoFuncao?: Date;
     codigoUnidadeSIMPROC?: string;
     codigoUnidadeSEI?: string;
     cargoComissao?: string;
     referenciaCargoComissao?: string;
-    dataInicioCargoComissao?: string;
-    dataTerminoCargoComissao?: string;
+    dataInicioCargoComissao?: Date;
+    dataTerminoCargoComissao?: Date;
     unidadeLotacaoCargoComissao?: string;
     departamentoCoordenadoriaCargoComissao?: string;
     provimentoCargas?: string;
     cargosLivresOcupados?: string;
     impedimentosLegais?: string;
-    dataInicioImpedimentosLegais?: string;
-    dataTerminoImpedimentosLegais?: string;
+    dataInicioImpedimentosLegais?: Date;
+    dataTerminoImpedimentosLegais?: Date;
 }

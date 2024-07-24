@@ -41,7 +41,14 @@
 
 .table {
     max-height: 50vh !important;
-    overflow: auto;
+    width: 250%;
+    overflow-x: auto; 
+    overflow-y: hidden; 
+}
+
+.tableContainer {
+    overflow-x: auto; 
+    overflow-y: hidden; 
 }
 
 .table::-webkit-scrollbar {

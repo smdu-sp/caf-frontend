@@ -1,5 +1,5 @@
-export default interface Row {
-    nome: any;
-    pago: boolean;
-    valor: number;
+export interface Row {
+    nome: string;
+    registroFuncional: string;
+    nomeSocial: string;
 }

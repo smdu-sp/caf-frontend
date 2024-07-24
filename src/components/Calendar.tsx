@@ -95,26 +95,24 @@ export default function Calendar() {
     }
   };
 
-  // Função para obter o funcionário pelo ID
-  function getEmployee(id: number): Employee | undefined {
-    const employeeList = CalendarService.get_employee();
-    const foundEmployee = employeeList.find((employee) => employee.id === id);
-    
-    if (foundEmployee) {
-      const transformedEvents = transformEvents(foundEmployee.events);
-      setList(transformedEvents);
-    }
-
-    return foundEmployee;
+// Função para obter o funcionário pelo ID
+function getEmployee(id: number): Employee | undefined {
+  const employeeList = CalendarService.get_employee();
+  const foundEmployee = employeeList.find((employee) => employee.id === id);
+  
+  if (foundEmployee) {
+    const transformedEvents = transformEvents(foundEmployee.events);
+    setEmployee(foundEmployee);
+    setList(transformedEvents);
+    updateHighlightedDays(transformedEvents, filter); // Atualizar os dias destacados com base nos eventos do funcionário encontrado
+  } else {
+    setEmployee(undefined);
+    setList([]);
+    setHighlightedDays([]); // Limpar os dias destacados se nenhum funcionário for encontrado
   }
 
-  // Adicionar o novo evento
-  function addDay() {
-    if (selectedDate) {
-      const newHighlightedDays = [...highlightedDays, selectedDate];
-      setHighlightedDays(newHighlightedDays);
-    }
-  }
+  return foundEmployee;
+}
 
   // Função para transformar e filtrar os eventos no tipo esperado usando o enum
   function transformEvents(events: { type: string, day: string }[]): Event[] {
@@ -133,17 +131,14 @@ export default function Calendar() {
     setHighlightedDays(days);
   }
 
-  // Função para realizar a busca do funcionário e atualizar os eventos
+  // Função para lidar com a pesquisa do funcionário
   function handleSearch() {
     const foundEmployee = getEmployee(Number(searchId));
-    if (foundEmployee) {
-      setEmployee(foundEmployee);
-
-      // Atualizar os dias destacados com base nos eventos do funcionário e no filtro atual
-      updateHighlightedDays(list, filter);
-    } else {
+    if (!foundEmployee) {
+      // Limpar o estado se nenhum funcionário for encontrado
       setEmployee(undefined);
-      setHighlightedDays([]); // Limpar os dias destacados se nenhum funcionário for encontrado
+      setList([]);
+      setHighlightedDays([]);
     }
   }
 
@@ -177,7 +172,7 @@ export default function Calendar() {
   return (
     <div className={style.filter}>
       <div className={style.form}>
-        <h3>Pesquisar Funcionário por ID:</h3>
+        <h3>Pesquisar Funcionário por RF:</h3>
         <div className={style.search}>
           <Input
             type="text"
@@ -190,7 +185,7 @@ export default function Calendar() {
         </div>
         {employee && (
           <div>
-            <h4>Funcionário Selecionado: {employee.name}</h4>
+            <h4>Servidor Selecionado: {employee.name}</h4>
           </div>
         )}
         <h3>Filtrar por Tipo:</h3>
@@ -201,12 +196,6 @@ export default function Calendar() {
         </Select>
         <h3>Adicionar Evento:</h3>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            className={style.datapicker}
-            label="Selecione a data"
-            value={selectedDate}
-            onChange={handleDateChange} 
-          />
           <Select value={eventType} onChange={(event, value) => setEventType(value as EventType)} className={style.select_event}>
             <Option value={EventType.Present}>Presente 🔵</Option>
             <Option value={EventType.Absence}>Falta 🟠</Option>

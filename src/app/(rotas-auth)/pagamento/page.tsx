@@ -6,14 +6,6 @@ import Content from '@/components/Content';
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableFooter from '@mui/material/TableFooter';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
@@ -22,15 +14,6 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import style from '@/app/(rotas-auth)/pagamento/style.module.css' ;
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import { 
-    Button,
-    FormControl, 
-    InputLabel, 
-    MenuItem, 
-    Select, 
-    SelectChangeEvent, 
-    TextField 
-} from '@mui/material';
 import Service from '@/services/Table';
 import TableFilter from '@/components/TableFilter';
 
@@ -115,7 +98,6 @@ export default function Pagamento() {
           <SimpleTreeView>
             <TreeItem className={style.functionalities} itemId="grid" label="Funcionalidade">
               <div>
-                <p>Descrição</p>
                 <TableFilter />
               </div>
             </TreeItem>
