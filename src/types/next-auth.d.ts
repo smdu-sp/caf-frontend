@@ -15,4 +15,18 @@ declare module 'next-auth' {
         access_token: string,
 		refresh_token: string
 	}
+	interface SessionFeriado {
+		usuarioFeraido: {
+			id: string
+			nome: string
+			login: string
+			email: string
+			permissao: string
+			status: number,
+			iat: number,
+			exp: number
+		},
+        access_token: string,
+		refresh_token: string
+	}
 }
