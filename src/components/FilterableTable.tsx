@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, MouseEvent, KeyboardEvent, FocusEvent, MouseEventHandler } from 'react';
 import {
     Sheet,
     Table,
@@ -57,7 +57,7 @@ const FilterableTable = ({ title, description, columns, rows }: FilterableTableP
         });
     };
 
-    const handleColumnSelectChange = (event: React.ChangeEvent<{ value: unknown }>, value: unknown) => {
+    const handleColumnSelectChange = (event: MouseEvent<Element, any> | KeyboardEvent<Element> | FocusEvent<Element, Element> | null, value: unknown) => {
         const selectedValue = value as string;
         setSelectedColumn(selectedValue);
 
@@ -68,7 +68,7 @@ const FilterableTable = ({ title, description, columns, rows }: FilterableTableP
         )));
     };
 
-    const handleDownloadSelectChange = (event: React.ChangeEvent<{ value: unknown }>, value: unknown) => {
+    const handleDownloadSelectChange = (event: MouseEvent<Element, any> | KeyboardEvent<Element> | FocusEvent<Element, Element> | null, value: unknown) => {
         setDownloadSelect(value as string);
     };
 
@@ -134,7 +134,7 @@ const FilterableTable = ({ title, description, columns, rows }: FilterableTableP
                     <Button id="download-button" sx={{ ml: 1 }} type="submit" onClick={handleDownloadClick}>
                         Download
                     </Button>
-                    <Select defaultValue='CSV' onChange={handleDownloadSelectChange}>
+                    <Select defaultValue='CSV' onChange={(e, val) => {handleDownloadSelectChange(e, val)}}>
                         <Option value='CSV'>.CSV</Option>
                         <Option value='XLSX'>.XLSX</Option>
                     </Select>
@@ -150,7 +150,7 @@ const FilterableTable = ({ title, description, columns, rows }: FilterableTableP
                                 id={`column-select-${index}`}
                                 placeholder='Coluna'
                                 value={filter.column}
-                                onChange={handleColumnSelectChange}
+                                onChange={(e, val) => handleColumnSelectChange(e, val)}
                             >
                                 {columns.map((col, idx) => (
                                     <Option key={idx} value={col.accessor}>{col.header}</Option>
