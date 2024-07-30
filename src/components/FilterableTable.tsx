@@ -110,11 +110,11 @@ const FilterableTable = ({ title, description, columns, rows }: FilterableTableP
     const handleDownloadClick = () => {
         const formattedRows = Service.format_filter_rows(filteredRows);
 
-        if (downloadSelect === 'CSV') {
-            DownloadService.downloadCSV(formattedRows, columns.map(col => col.header), 'tabela_filtrada_pagamentos.csv');
-        } else if (downloadSelect === 'XLSX') {
-            DownloadService.downloadXLSX(formattedRows, 'tabela_filtrada_pagamentos.xlsx');
-        }
+        // if (downloadSelect === 'CSV') {
+        //     DownloadService.downloadCSV(formattedRows, columns.map(col => col.header), 'tabela_filtrada_pagamentos.csv');
+        // } else if (downloadSelect === 'XLSX') {
+        //     DownloadService.downloadXLSX(formattedRows, 'tabela_filtrada_pagamentos.xlsx');
+        // }
     };
 
     const calculatePercentage = (condition: (item: CompleteTableRow) => boolean): number => {
