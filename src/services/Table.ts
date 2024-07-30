@@ -1,4 +1,4 @@
-import Column from '@/interface/column';
+import Column from '@/interface/Column';
 import CompleteTableRow from '@/interface/CompletTableRow'; 
 import { TableRow } from '@/interface/RowPayments';
 
@@ -773,4 +773,12 @@ export default class Data {
             valor: 0,  // Ajuste conforme necessário
         }));
     }    
+
+    static filter_rows_by_date(rows: CompleteTableRow[], column: string, startDate: Date, endDate: Date): CompleteTableRow[] {
+        return rows.filter(row => {
+            const date = new Date(row[column]);
+            return date >= startDate && date <= endDate;
+        });
+    }
+    
 }

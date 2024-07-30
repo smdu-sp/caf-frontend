@@ -1,5 +1,4 @@
 import React from 'react';
-import { Card } from '@mui/joy';
 import Service from '@/services/Table';
 import FilterableTable from './FilterableTable';
 import CompleteTableRow from '@/interface/CompletTableRow';

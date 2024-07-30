@@ -2,7 +2,6 @@
 import Content from "@/components/Content";
 import * as React from 'react';
 import Calendar from "@/components/Calendar";
-import { TextField } from "@mui/material";
 
 export default function Frequencia (){
   return (

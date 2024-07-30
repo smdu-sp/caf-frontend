@@ -125,11 +125,8 @@ const FilterableTable = ({ title, description, columns, rows }: FilterableTableP
         return (count / total) * 100;
     };
 
-    const calculatePaidPercentage = useCallback(() => calculatePercentage(item => item.possuidorDeficiencia), [graficData]);
-    const calculateUnpaidPercentage = useCallback(() => calculatePercentage(item => !item.possuidorDeficiencia), [graficData]);
-
     return (
-        <Card sx={{ p: 2, borderRadius: 'sm', boxShadow: 'md' }}>
+        <Card sx={{ p: 2, borderRadius: 'sm', boxShadow: 'md', marginTop: '10px' }}>
             <div className={style.header}>
                 <h2>{title}</h2>
                 <p>{description}</p>
