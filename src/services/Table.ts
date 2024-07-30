@@ -775,7 +775,7 @@ export default class Data {
     }    
 
     static filter_rows_by_date(rows: CompleteTableRow[], column: string, startDate: Date, endDate: Date): CompleteTableRow[] {
-        return rows.filter(row => {
+        return rows.filter((row: any) => {
             const date = new Date(row[column]);
             return date >= startDate && date <= endDate;
         });
