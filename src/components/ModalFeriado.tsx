@@ -22,6 +22,7 @@ interface ModalProps {
   setOpen: (open: boolean) => void;
   id?: string;
   buscaFeriado: any;
+  buscaFeriadoRecorrente: any;
   modo: number;
 }
 
@@ -40,43 +41,56 @@ export default function BasicModalDialog(props: ModalProps) {
   React.useEffect(() => {
     if (id) {
       FeriadoService.buscarUnico(id, props.modo)
-      .then((response) => {
-        setNome(response.nome)
-        setData(data)
-        setTipo(response.tipo)
-        setNivel(response.nivel)
-        setStatus(response.status)
-        setModo(response.modo)
-        setDescricao(response.descricao || "")
-      })
+        .then((response) => {
+          setNome(response.nome)
+          setData(data)
+          setTipo(response.tipo)
+          setNivel(response.nivel)
+          setStatus(response.status)
+          setModo(response.modo)
+          setDescricao(response.descricao || "")
+        })
     }
-  }, [id]) 
+  }, [id])
 
   function cadastrarFeriado(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!id) {
       FeriadoService.verica(data.toISOString())
-      .then((response) => {
-        if (response === true) {
-          setAlert('Data Indisponivel', `Esta data já esta relacioanda a outro feriado`, 'danger', 3000, Check);
-          props.setOpen(true);
-          return;
-        } else {
-          FeriadoService.criar(nome, data, tipo, nivel, status, modo, descricao);
-          props.buscaFeriado();
-          props.setOpen(false);
-          setAlert('Feriado Criado!', `${tipo} registrado com sucesso`, 'success', 3000, Check);
-        }
-      })
+        .then((response) => {
+          if (response === true) {
+            setAlert('Data Indisponivel', `Esta data já esta relacioanda a outro feriado`, 'danger', 3000, Check);
+            props.setOpen(true);
+            return;
+          } else {
+            FeriadoService.criar(nome, data, tipo, nivel, status, modo, descricao);
+            props.buscaFeriado();
+            props.setOpen(false);
+            setAlert('Feriado Criado!', `${tipo} registrado com sucesso`, 'success', 3000, Check);
+            setNome("")
+            setData(new Date())
+            setTipo("")
+            setNivel("")
+            setStatus(0)
+            setModo(0)
+            setDescricao("")
+          }
+        })
     } else {
       FeriadoService.atualizar(id ? id : "", nome, data, tipo, nivel, status, modo, descricao, props.modo)
-      .then((response) => {
-        if (response) {
-          props.buscaFeriado();
-          props.setOpen(false);
-          setAlert('Feriado Atualizado!', `${nome} atualizado com sucesso`, 'success', 3000, Check);
-        }
-      })
+        .then((response) => {
+          if (response) {
+            if (props.modo === 1) {
+              props.buscaFeriado();
+              props.setOpen(false);
+              setAlert('Feriado Atualizado!', `${nome} atualizado com sucesso`, 'success', 3000, Check);
+            } else {
+              props.buscaFeriadoRecorrente();
+              props.setOpen(false);
+              setAlert('Feriado Atualizado!', `${nome} atualizado com sucesso`, 'success', 3000, Check);
+            }
+          }
+        })
     }
   }
 
@@ -143,7 +157,7 @@ export default function BasicModalDialog(props: ModalProps) {
               </FormControl>
             </Grid>
             <Grid xs={12}>
-              <Button type="submit">Submit</Button>
+              <Button type="submit">{id ? "Atualizar" : "Registrar"}</Button>
             </Grid>
           </Grid>
         </form>

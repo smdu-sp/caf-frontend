@@ -41,12 +41,12 @@ export interface ICriarFeriado extends Partial<IFeriado> { }
 
 export interface IAtualizarFerido extends Partial<ICriarFeriado> { }
 
-const baseURL = 'http://localhost:3000/feriado/';
+const baseURL = 'http://localhost:3000/feriados/';
 
 
 async function buscarPorAno(ano: string, pagina: number, limite: number, buscar: string, status: number) {
     const session = await getServerSession(authOptions);
-    const reunoes = await fetch(`${baseURL}ano/${ano}?pagina=${pagina}&limite=${limite}&buscra=${buscar}&status=${status}`, {
+    const reunoes = await fetch(`${baseURL}ano/${ano}?pagina=${pagina}&limite=${limite}&busca=${buscar}&status=${status}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -76,7 +76,7 @@ async function buscarData(data: string, pagina: number, limite: number, total: n
 
 async function buscarPeriodo(data1: string, data2: string, pagina: number, limite: number, buscar: string) {
     const session = await getServerSession(authOptions);
-    const reunoes = await fetch(`${baseURL}data/${data1}/${data2}?pagina=${pagina}&limite=${limite}&buscra=${buscar}`, {
+    const reunoes = await fetch(`${baseURL}data/${data1}/${data2}?pagina=${pagina}&limite=${limite}&busca=${buscar}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -91,7 +91,7 @@ async function buscarPeriodo(data1: string, data2: string, pagina: number, limit
 
 async function buscarTudo(pagina: number, limite: number, buscar?: string, status?: number) {
     const session = await getServerSession(authOptions);
-    const reunoes = await fetch(`${baseURL}buscar/feriados?pagina=${pagina}&limite=${limite}&buscra=${buscar}&status=${status}`, {
+    const reunoes = await fetch(`${baseURL}buscar/feriados?pagina=${pagina}&limite=${limite}&busca=${buscar}&status=${status}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -151,7 +151,7 @@ async function buscarFeriadosInativos() {
 
 async function buscarFeriadosRecorrentes(pagina: number, limite: number, buscar?: string, status?: number) {
     const session = await getServerSession(authOptions);
-    const reunoes = await fetch(`${baseURL}recorrentes?pagina=${pagina}&limite=${limite}&buscra=${buscar}&status=${status}`, {
+    const reunoes = await fetch(`${baseURL}recorrentes?pagina=${pagina}&limite=${limite}&busca=${buscar}&status=${status}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -214,7 +214,7 @@ async function criar(nome: string, data: Date, tipo: string, nivel: string, stat
 
 async function buscarUnico(id: string, modo: number): Promise<IFeriado> {
     const session = await getServerSession(authOptions);
-    const subprefeituras = await fetch(`${baseURL}buscar/${id}?modo=${1}`, {
+    const subprefeituras = await fetch(`${baseURL}buscar/${id}?modo=${modo}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -229,7 +229,7 @@ async function buscarUnico(id: string, modo: number): Promise<IFeriado> {
 
 async function atualizar(id: string, nome: string, data: Date, tipo: string, nivel: string, status: number, modo: number, descricao?: string, modoFeriado?: number): Promise<IAtualizarFerido> {
     const session = await getServerSession(authOptions);
-    const subprefeituras = await fetch(`${baseURL}atualizar/${id}?modo${modoFeriado}`, {
+    const subprefeituras = await fetch(`${baseURL}atualizar/${id}?modo=${modoFeriado}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
@@ -251,7 +251,6 @@ export {
     buscarData,
     buscarPeriodo,
     buscarTudo,
-    buscarFeriadosInativos,
     buscarFeriadosRecorrentes,
     buscar,
     criar,

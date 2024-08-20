@@ -1,7 +1,7 @@
 // Importar bibliotecas necessárias
 import { parse } from 'json2csv';
 import * as XLSX from 'xlsx';
-import Row from '@/interface/Row'
+import { Row } from '@/interface/Row'
 
 // Serviço de download
 export default class DownloadService {

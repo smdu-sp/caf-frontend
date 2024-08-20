@@ -19,7 +19,7 @@ export default function Feriados() {
     const [pagina, setPagina] = useState(1);
     const [limite, setLimite] = useState(10);
     const [total, setTotal] = useState(1);
-    const [busca, setBusca] = useState('');
+    const [buscaFiltro, setBuscaFiltro] = useState('');
     const [filtro, setFiltro] = useState(1);
     const [values, setValues] = useState<IFeriado[]>([])
     const [ano, setAno] = useState<number>(parseInt(new Date().getFullYear().toString()))
@@ -38,7 +38,7 @@ export default function Feriados() {
     }, []);
 
     useEffect(() => {
-        tipo === 2 && buscarFeriadosRecorrentes()
+        tipo === 0 && buscarFeriadosRecorrentes()
         setModo(tipo)
     }, [status, tipo]);
 
@@ -56,7 +56,6 @@ export default function Feriados() {
         pergunta: '',
         color: 'primary'
     }
-    const [confirma, setConfirma] = useState(confirmaVazio);
 
     const router = useRouter();
 
@@ -84,13 +83,14 @@ export default function Feriados() {
         setPagina(1);
     };
 
-    const buscaFeriados = async (ano: number) => {
+    const buscaFeriados = async (ano: number, busca = buscaFiltro) => {
         await FeriadoService.buscarPorAno(ano.toString(), pagina, limite, busca, status)
             .then((response: IFeriadoPaginado) => {
                 setTotal(response.total);
                 setPagina(response.pagina);
                 setLimite(response.limite);
                 setValues(response.data);
+                console.log(response);
             });
     }
 
@@ -103,7 +103,7 @@ export default function Feriados() {
                 setValues(response.data);
             });
     }
-    const buscaTudo = async (status: number) => {
+    const buscaTudo = async (status: number, busca = buscaFiltro) => {
         await FeriadoService.buscarTudo(pagina, limite, busca, status)
             .then((response: IFeriadoPaginado) => {
                 setTotal(response.total);
@@ -114,7 +114,7 @@ export default function Feriados() {
     }
 
     const buscaPeriodo = async (data1: string, data2?: string) => {
-        await FeriadoService.buscarPeriodo(data1, data2 ? data2 : "", pagina, limite, busca)
+        await FeriadoService.buscarPeriodo(data1, data2 ? data2 : "", pagina, limite, buscaFiltro)
             .then((response: IFeriadoPaginado) => {
                 setTotal(response.total);
                 setPagina(response.pagina);
@@ -124,7 +124,7 @@ export default function Feriados() {
     }
 
     const buscarFeriadosRecorrentes = async () => {
-        await FeriadoService.buscarFeriadosRecorrentes(pagina, limite, busca, status)
+        await FeriadoService.buscarFeriadosRecorrentes(pagina, limite, buscaFiltro, status)
             .then((response: IFeriadoPaginado) => {
                 setTotal(response.total);
                 setPagina(response.pagina);
@@ -191,8 +191,20 @@ export default function Feriados() {
                     alignItems: 'end',
                 }}
             >
-                <IconButton size='sm' onClick={() => { }}><Refresh /></IconButton>
-                <IconButton size='sm' onClick={() => { setFiltro(1); buscaFeriados(new Date().getFullYear()) }}><Clear /></IconButton>
+                <IconButton size='sm' onClick={() => {
+                    if (tipo === 1) {
+                        setFiltro(1); buscaFeriados(new Date().getFullYear())
+                    } else {
+                        setFiltro(0); buscarFeriadosRecorrentes()
+                    }
+                }}><Refresh /></IconButton>
+                <IconButton size='sm' onClick={() => {
+                    if (tipo === 1) {
+                        setFiltro(1); buscaFeriados(new Date().getFullYear())
+                    } else {
+                        setFiltro(0); buscarFeriadosRecorrentes()
+                    }
+                }}><Clear /></IconButton>
                 <FormControl size="sm">
                     <FormLabel>Filtro: </FormLabel>
                     <Select
@@ -204,12 +216,11 @@ export default function Feriados() {
                             <>
                                 <Option value={1}>Ano</Option>
                                 <Option value={2}>Período</Option>
-                                {/* <Option value={3}>Data</Option> */}
-                                <Option value={5} onClick={() => { buscaTudo(0) }}>Tudo</Option>
+                                <Option value={5} onClick={() => { buscaTudo(0, buscaFiltro) }}>Tudo</Option>
                             </>
                             : <Option value={6} onClick={() => { setStatus(0); }}>Ativos</Option>
                         }
-                        <Option value={4} onClick={() => { tipo === 1 ? buscaTudo(1) : setStatus(1); }}>Inativos</Option>
+                        <Option value={4} onClick={() => { tipo === 1 ? buscaTudo(1, buscaFiltro) : setStatus(1); }}>Inativos</Option>
                     </Select>
                 </FormControl>
 
@@ -291,21 +302,33 @@ export default function Feriados() {
                     <Select
                         size="sm"
                         value={tipo}
-                        onChange={(_, v) => {setTipo(v ? v : 0); setModo(v ? v : 0)}}
+                        onChange={(_, v) => { setTipo(v ? v : 0); setModo(v ? v : 0) }}
                     >
-                        <Option value={1} onClick={() => { setFiltro(1); buscaFeriados(ano)}}>Feriados</Option>
-                        <Option value={2} onClick={() => { setFiltro(0); buscarFeriadosRecorrentes() }}>Recorrentes</Option>
+                        <Option value={1} onClick={() => { setFiltro(1); buscaFeriados(ano) }}>Feriados</Option>
+                        <Option value={0} onClick={() => { setFiltro(0); buscarFeriadosRecorrentes() }}>Recorrentes</Option>
                     </Select>
                 </FormControl>
                 <FormControl sx={{ flex: 1 }} size="sm">
                     <FormLabel>Buscar: </FormLabel>
                     <Input
                         startDecorator={<Search fontSize='small' />}
-                        value={busca}
-                        onChange={(event) => setBusca(event.target.value)}
+                        value={buscaFiltro}
+                        onChange={(event) => setBuscaFiltro(event.target.value)}
                         onKeyDown={(event) => {
                             if (event.key === 'Enter') {
-
+                                if (tipo === 1) {
+                                    if (filtro === 1) {
+                                        buscaFeriados(ano, buscaFiltro)
+                                    } else if (filtro === 5) {
+                                        buscaTudo(0, buscaFiltro)
+                                    } else if (filtro === 2) {
+                                        buscaPeriodo(inicio.toISOString().split('T')[0], fim.toISOString().split('T')[0])
+                                    } else {
+                                        buscaTudo(1, buscaFiltro)
+                                    }
+                                } else {
+                                    buscarFeriadosRecorrentes()
+                                }
                             }
                         }}
                     />
@@ -363,6 +386,7 @@ export default function Feriados() {
                 subTitulo="Preencha os dados abaixo:"
                 setOpen={() => setOpen(!open)}
                 buscaFeriado={() => buscaFeriados(ano)}
+                buscaFeriadoRecorrente={() => buscarFeriadosRecorrentes()}
                 id={id}
                 modo={modo}
             />
