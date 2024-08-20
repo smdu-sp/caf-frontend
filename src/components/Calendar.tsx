@@ -7,7 +7,6 @@ import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { Button, Input, Option, Select } from '@mui/joy';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import style from '@/app/(rotas-auth)/frequencia/calendar.module.css';
 import CalendarService from '@/services/Calendar';
 import { useState } from 'react';
@@ -169,6 +168,24 @@ function getEmployee(id: number): Employee | undefined {
     setSelectedDate(date);
   };
 
+  // Função para calcular a recorrência dos eventos
+  const calculateRecurrence = () => {
+    const recurrence = {
+      [EventType.Present]: 0,
+      [EventType.Absence]: 0,
+      [EventType.Unjustified]: 0,
+    };
+
+    list.forEach(event => {
+      recurrence[event.type]++;
+    });
+
+    return recurrence;
+  };
+
+  // Obter a recorrência atual dos eventos
+  const recurrence = calculateRecurrence();
+
   return (
     <div className={style.filter}>
       <div className={style.form}>
@@ -213,15 +230,27 @@ function getEmployee(id: number): Employee | undefined {
       </div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         {employee && (
-          <DateCalendar
-            className={style.calendar}
-            value={selectedDate} 
-            onChange={handleDateChange}
-            renderLoading={() => <DayCalendarSkeleton />}
-            slots={{
-              day: (props) => <ServerDay {...props} highlightedDays={highlightedDays} filter={filter} />,
-            }}
-          />
+          <>
+            <div className={style.calendar}>
+              <DateCalendar
+                className={style.calendar}
+                value={selectedDate} 
+                onChange={handleDateChange}
+                renderLoading={() => <DayCalendarSkeleton />} // Usando o renderLoading para esqueleto do calendário
+                slots={{
+                  day: (dayProps) => (
+                    <ServerDay {...dayProps} highlightedDays={highlightedDays} filter={filter} />
+                  ),
+                }}
+              />
+              <div >
+                <h4>Recorrência do Evento:</h4>
+                <p>Presenças: {recurrence.present}</p>
+                <p>Faltas: {recurrence.absence}</p>
+                <p>Faltas Injustificadas: {recurrence.unjustified}</p>
+              </div>
+            </div>
+          </>
         )}
       </LocalizationProvider>
     </div>
