@@ -96,7 +96,65 @@ export default class Data {
         };
     }
 
-    // Atualizando get_data_test para usar CompleteTableRow e a nova função createData
+    
+    static get_columns_test():Column[] {
+        return [
+            { header: 'Nome Social', accessor: 'nomeSocial', type: 'text'},
+            { header: 'Registro Funcional', accessor: 'registroFuncional', type: 'text'},
+            { header: 'Nome', accessor: 'nomeCompleto', type: 'text'},
+            { header: 'Registro Funcional 2', accessor: 'registroFuncional', type: 'text'},
+            { header: 'Substituto (sem dados)', accessor: 'uf', type: 'text'},
+            { header: 'Cargo', accessor: 'cargoComissao', type: 'text'},
+            { header: 'Referência', accessor: 'referenciaCargoComissao', type: 'text'},
+            { header: 'Mês de Referência', accessor: 'dataExoneracaoCargoFuncao', type: 'date'},
+            { header: 'Início', accessor: 'dataInicioCargoComissao', type: 'date'},
+            { header: 'Fim', accessor: 'dataTerminoCargoComissao', type: 'date'},
+            { header: 'Motivo (sem dados)', accessor: 'uf', type: 'text'},
+            { header: 'Documento (sem dados)', accessor: 'uf', type: 'text'},
+            { header: 'Conferência (sem dados)', accessor: 'uf', type: 'text'},
+            { header: 'Observação (sem dados)', accessor: 'uf', type: 'text' }
+        ];
+    };
+
+    // Atualizando filter_rows para usar CompleteTableRow
+    static filter_rows = (rows: CompleteTableRow[], column: string, value: string, dateRange?: [Date | null, Date | null]): CompleteTableRow[] => {
+        if (dateRange) {
+            return this.filterRowsByDate(rows, column, dateRange);
+        } else {
+            // Filtro de texto
+            return rows.filter(row => {
+                const cellValue = (row as any)[column];
+                return cellValue && cellValue.toString().includes(value);
+            });
+        }
+    };
+    
+    static filterRowsByDate = (rows: CompleteTableRow[], column: string, dateRange: [Date | null, Date | null]): CompleteTableRow[] => {
+        const [startDate, endDate] = dateRange;
+        
+        return rows.filter(row => {
+            const cellValue = new Date((row as any)[column]);
+            return (!startDate || cellValue >= startDate) && (!endDate || cellValue <= endDate);
+        });
+    };
+    
+    // Atualizando format_filter_rows para usar CompleteTableRow
+    static format_filter_rows(rows: CompleteTableRow[]): CompleteTableRow[] {
+        return rows.map(row => ({
+            ...row,
+            pago: row.possuidorDeficiencia ? true : false,  // Exemplo de conversão para o campo 'pago'
+            valor: 0,  // Ajuste conforme necessário
+        }));
+    }    
+    
+    static formatDate(dateString: string): string {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+    
     static get_data_test(): CompleteTableRow[] {
         const rows: CompleteTableRow[] = [
             {
@@ -730,55 +788,72 @@ export default class Data {
                 dataTerminoImpedimentosLegais: new Date('2025-02-01')
             },
         ];
+          
         return rows;
     }
 
-    static get_columns_test():Column[] {
-        return [
-            { header: 'Nome Social', accessor: 'nomeSocial' },
-            { header: 'Registro Funcional', accessor: 'registroFuncional' },
-            { header: 'Nome', accessor: 'nomeCompleto' },
-            { header: 'Registro Funcional 2', accessor: 'registroFuncional' },
-            { header: 'Substituto (sem dados)', accessor: 'uf' },
-            { header: 'Cargo', accessor: 'cargoComissao' },
-            { header: 'Referência', accessor: 'referenciaCargoComissao' },
-            { header: 'Mês de Referência', accessor: 'dataExoneracaoCargoFuncao' } ,
-            { header: 'Início', accessor: 'dataInicioCargoComissao' },
-            { header: 'Fim', accessor: 'dataTerminoCargoComissao' },
-            { header: 'Motivo (sem dados)', accessor: 'uf' },
-            { header: 'Documento (sem dados)', accessor: 'uf' },
-            { header: 'Conferência (sem dados)', accessor: 'uf' },
-            { header: 'Observação (sem dados)', accessor: 'uf' }
-        ];
-    };
+    static get_columns_substitute():Column[] {
+        const column: Column[] = [
+            { header: 'Nome Social', accessor: 'nomeSocial', type: 'text' },
+            { header: 'Registro Funcional', accessor: 'registroFuncional', type: 'text' },
+            { header: 'Nome', accessor: 'nomeCompleto', type: 'text' },
+            { header: 'Registro Funcional 2', accessor: 'registroFuncional', type: 'text' }, // TO check
+            { header: 'Substituto (sem dados)', accessor: 'uf', type: 'text' },
+            { header: 'Cargo', accessor: 'cargoComissao', type: 'text' }, // TO check
+            { header: 'Referência', accessor: 'referenciaCargoComissao', type: 'text' }, // TO check
+            { header: 'Mês de Referência', accessor: 'dataExoneracaoCargoFuncao', type: 'date' }, // TO check
+            { header: 'Início', accessor: 'dataInicioCargoComissao', type: 'date' }, // TO check
+            { header: 'Fim', accessor: 'dataTerminoCargoComissao', type: 'date' }, // TO check
+            { header: 'Motivo (sem dados)', accessor: 'uf', type: 'text' },
+            { header: 'Documento (sem dados)', accessor: 'uf', type: 'text' },
+            { header: 'Conferência (sem dados)', accessor: 'uf', type: 'text' },
+            { header: 'Observação (sem dados)', accessor: 'uf', type: 'text' }
+        ] as Column[]
 
-    // Atualizando filter_rows para usar CompleteTableRow
-    static filter_rows(rows: CompleteTableRow[], column: string, value: string): CompleteTableRow[] {
-        return rows.filter(row => {
-            const cellValue = row[column as keyof CompleteTableRow];
-            if (typeof cellValue === 'string') {
-                return cellValue.toLowerCase().includes(value.toLowerCase());
-            } else if (typeof cellValue === 'number') {
-                return cellValue.toString().includes(value);
-            }
-            return false;
-        });
+        return column
     }
 
-    // Atualizando format_filter_rows para usar CompleteTableRow
-    static format_filter_rows(rows: CompleteTableRow[]): CompleteTableRow[] {
-        return rows.map(row => ({
-            ...row,
-            pago: row.possuidorDeficiencia ? true : false,  // Exemplo de conversão para o campo 'pago'
-            valor: 0,  // Ajuste conforme necessário
-        }));
-    }    
+    static get_columns_license():Column[] {
+        const column: Column[] = [
+            { header: 'RF', accessor: 'registroFuncional', type: 'text' },
+            { header: 'Nome', accessor: 'nomeCompleto', type: 'text' },
+            { header: 'Impedimentos Legais', accessor: 'impedimentosLegais', type: 'text' },
+            { header: 'Inicio', accessor: 'dataInicioImpedimentosLegais', type: 'date' },
+            { header: 'Término', accessor: 'dataTerminoImpedimentosLegais', type: 'date' }, 
+            { header: 'Documento (fora da lista de campos)', accessor: 'uf', type: 'text' },
+            { header: 'Conferência (fora da lista de campos)', accessor: 'uf', type: 'text' },
+        ] as Column[]
 
-    static filter_rows_by_date(rows: CompleteTableRow[], column: string, startDate: Date, endDate: Date): CompleteTableRow[] {
-        return rows.filter(row => {
-            const date = new Date(row[column]);
-            return date >= startDate && date <= endDate;
-        });
+        return column
     }
-    
+
+    static get_columns_promotion():Column[] {
+        const column: Column[] = [
+            { header: 'RF', accessor: 'registroFuncional', type: 'text' },
+            { header: 'Nome', accessor: 'nomeCompleto', type: 'text' },
+            { header: 'Evento', accessor: 'provimentoCargoFuncao', type: 'text' }, // TO check
+            { header: 'Inicio', accessor: 'dataInicioCargoFuncao', type: 'date' },
+            { header: 'Cargo', accessor: 'provimentoCargoFuncao', type: 'text' },
+            { header: 'Documento (fora da lista de campos)', accessor: 'uf', type: 'text' },
+            { header: 'Conferência (fora da lista de campos)', accessor: 'uf', type: 'text' },
+        ] as Column[]
+
+        return column
+    }
+
+    static get_columns_promot():Column[] {
+        const column: Column[] = [
+            { header: 'RF', accessor: 'registroFuncional', type: 'text' },
+            { header: 'Nome', accessor: 'nomeCompleto', type: 'text' },
+            { header: 'Cargo', accessor: 'cargoFuncao', type: 'text' },
+            { header: 'Mês referência', accessor: 'referenciaCargoFuncao', type: 'text' }, // TO check
+            { header: 'Início', accessor: 'dataInicioCargoFuncao', type: 'date' },
+            { header: 'Exoneração', accessor: 'dataExoneracaoCargoFuncao', type: 'date' },
+            { header: 'Publicação (fora da lista de campos)', accessor: 'uf', type: 'text' },
+            { header: 'Observação (fora da lista de campos)', accessor: 'uf', type: 'text' },
+            { header: 'Conferência (fora da lista de campos)', accessor: 'uf', type: 'text' },
+        ] as Column[]
+
+        return column
+    }
 }

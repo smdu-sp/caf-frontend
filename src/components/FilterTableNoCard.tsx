@@ -126,7 +126,7 @@ const FilterableTable = ({ title, description, columns, rows }: FilterableTableP
     };
 
     return (
-        <Card sx={{ p: 2, borderRadius: 'sm', boxShadow: 'md', marginTop: '10px' }}>
+        <div>
             <div className={style.header}>
                 <h2>{title}</h2>
                 <p>{description}</p>
@@ -235,7 +235,7 @@ const FilterableTable = ({ title, description, columns, rows }: FilterableTableP
                     {/* Adicione gráficos aqui */}
                 </TabPanel>
             </Tabs>
-        </Card>
+        </div>
     );
 };
 

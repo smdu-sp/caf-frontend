@@ -1,8 +1,5 @@
 'use client'
 
-import Content from '@/components/Content';
-
-
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -11,11 +8,12 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import style from '@/app/(rotas-auth)/pagamento/style.module.css' ;
-import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
+import { Tabs, Tab, Typography } from '@mui/material';
 import Service from '@/services/Table';
-import TableFilter from '@/components/TableFilter';
+import FilterableTable from '@/components/FilterableTable';
+import CompleteTableRow from '@/interface/CompletTableRow';
+import Column from '@/interface/Column';
+import Content from '@/components/Content';
 
 interface TablePaginationActionsProps {
   count: number;
@@ -83,28 +81,53 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
   );
 }
 
-function createData(name: string, calories: number, fat: number) {
-  return { name, calories, fat };
-}
-
-const rows = Service.get_data_test()
+const rows: CompleteTableRow[] = Service.get_data_test();
+const columns_substitute: Column[] = Service.get_columns_substitute();
+const columns_license: Column[] = Service.get_columns_license();
+const columns_promotion: Column[] = Service.get_columns_promotion();
 
 export default function Pagamento() {
-    return (
-        <Content
-          titulo='Página Pagamento'
-          pagina='pagamento'
-          >
-          <SimpleTreeView>
-            <TreeItem className={style.functionalities} itemId="grid" label="Funcionalidade">
-              <div>
-                <TableFilter />
-              </div>
-            </TreeItem>
-            <TreeItem itemId="grid2" label="Funcionalidade 2">
-              <p>Descrição</p>
-            </TreeItem>
-          </SimpleTreeView>
-      </Content>
-    );
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
+  return (
+    <Content titulo='Página Pagamento' pagina='pagamento'>
+      <Box sx={{ width: '100%' }}>
+        <Tabs value={value} onChange={handleChange} aria-label="navigation tabs">
+          <Tab label="Substituição" />
+          <Tab label="Licença Saúde" />
+          <Tab label="Promoção" />
+        </Tabs>
+        <Box sx={{ p: 3 }}>
+          {value === 0 && (
+            <FilterableTable
+              title="Substituição"
+              description="Busca por substitutos."
+              columns={columns_substitute}  
+              rows={rows}
+            />
+          )}
+          {value === 1 && (
+            <FilterableTable
+              title="Licença Saúde"
+              description="Dados de funcionários com licença saúde."
+              columns={columns_license}  
+              rows={rows}
+            />
+          )}
+          {value === 2 && (
+            <FilterableTable
+              title="Promoção"
+              description="Dados de funcionários que foram promovidos."
+              columns={columns_promotion}  
+              rows={rows}
+            />
+          )}
+        </Box>
+      </Box>
+    </Content>
+  );
 }

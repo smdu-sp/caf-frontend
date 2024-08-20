@@ -42,4 +42,5 @@ export default interface CompleteTableRow {
     impedimentosLegais?: string;
     dataInicioImpedimentosLegais?: Date;
     dataTerminoImpedimentosLegais?: Date;
+    [key: string]: any;
 }
