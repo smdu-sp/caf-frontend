@@ -856,4 +856,17 @@ export default class Data {
 
         return column
     }
+
+    static get_sheet():Column[] {
+        const column: Column[] = [
+            { header: 'RF', accessor: 'registroFuncional', type: 'text' },
+            { header: 'Nome', accessor: 'nomeCompleto', type: 'text' },
+            { header: 'Vínculo', accessor: 'cargoFuncao', type: 'text' },
+            { header: 'EH', accessor: 'uf', type: 'text' },
+            { header: 'Unidade', accessor: 'uf', type: 'text' },
+            { header: 'Mês referência', accessor: 'referenciaCargoFuncao', type: 'text' }, // TO check
+        ] as Column[]
+
+        return column
+    }
 }

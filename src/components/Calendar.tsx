@@ -244,10 +244,10 @@ function getEmployee(id: number): Employee | undefined {
                 }}
               />
               <div >
-                <h4>Recorrência do Evento:</h4>
-                <p>Presenças: {recurrence.present}</p>
-                <p>Faltas: {recurrence.absence}</p>
-                <p>Faltas Injustificadas: {recurrence.unjustified}</p>
+                <h4 className={style.calendar_info}>Recorrência do Evento:</h4>
+                <p className={style.calendar_info}>Presenças: {recurrence.present}</p>
+                <p className={style.calendar_info}>Faltas: {recurrence.absence}</p>
+                <p className={style.calendar_info}>Faltas Injustificadas: {recurrence.unjustified}</p>
               </div>
             </div>
           </>
