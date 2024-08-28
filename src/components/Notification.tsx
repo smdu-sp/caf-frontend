@@ -13,7 +13,7 @@ import Style from '@/app/(rotas-auth)/notifica/style.module.css'
 export default function Notification() {
     const [showTable, setShowTable] = useState(false);
 
-    const rows: CompleteTableRow[] = Service.get_data_test();
+    const rows: CompleteTableRow[] = Service.get_data();
     const columns_substitute: Column[] = Service.get_columns_substitute();
 
     const handleButtonClick = () => {

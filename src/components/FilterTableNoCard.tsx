@@ -14,7 +14,6 @@ import {
 import Tabs from '@mui/joy/Tabs';
 import TabList from '@mui/joy/TabList';
 import Tab from '@mui/joy/Tab';
-import { PieChart } from '@mui/x-charts/PieChart';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Pagination from '@mui/material/Pagination';

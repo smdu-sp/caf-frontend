@@ -81,7 +81,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
   );
 }
 
-const rows: CompleteTableRow[] = Service.get_data_test();
+const rows: CompleteTableRow[] = Service.get_data();
 const columns_substitute: Column[] = Service.get_columns_substitute();
 const columns_license: Column[] = Service.get_columns_license();
 const columns_promotion: Column[] = Service.get_columns_promotion();

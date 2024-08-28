@@ -26,7 +26,7 @@ type Event = {
 
 // Definindo o tipo para os funcionários
 type Employee = {
-  id: number;
+  rf: string;
   name: string;
   events: { type: string; day: string }[];
 }
@@ -72,7 +72,7 @@ const ServerDay = (props: PickersDayProps<Dayjs> & { highlightedDays?: Dayjs[], 
 export default function Calendar() {
   const [filter, setFilter] = useState<EventType>(EventType.Present);
   const [eventType, setEventType] = useState<EventType>(EventType.Present);
-  const [searchId, setSearchId] = useState<string>('');
+  const [searchRf, setSearchRf] = useState<string>('');
   const [employee, setEmployee] = useState<Employee>();
   const [highlightedDays, setHighlightedDays] = useState<Dayjs[]>([]);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
@@ -80,7 +80,7 @@ export default function Calendar() {
 
   // Função para atualizar o estado do SearchId
   const handleSearchIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchId(event.target.value);
+    setSearchRf(event.target.value);
   };
 
   // Função para atualizar o estado do Filter usando o enum
@@ -94,24 +94,24 @@ export default function Calendar() {
     }
   };
 
-// Função para obter o funcionário pelo ID
-function getEmployee(id: number): Employee | undefined {
-  const employeeList = CalendarService.get_employee();
-  const foundEmployee = employeeList.find((employee) => employee.id === id);
-  
-  if (foundEmployee) {
-    const transformedEvents = transformEvents(foundEmployee.events);
-    setEmployee(foundEmployee);
-    setList(transformedEvents);
-    updateHighlightedDays(transformedEvents, filter); // Atualizar os dias destacados com base nos eventos do funcionário encontrado
-  } else {
-    setEmployee(undefined);
-    setList([]);
-    setHighlightedDays([]); // Limpar os dias destacados se nenhum funcionário for encontrado
-  }
+  // Função para obter o funcionário pelo ID
+  function getEmployee(rf: string): Employee | undefined {
+    const employeeList = CalendarService.get_employee();
+    const foundEmployee = employeeList.find((employee) => employee.rf === rf);
+    
+    if (foundEmployee) {
+      const transformedEvents = transformEvents(foundEmployee.events);
+      setEmployee(foundEmployee);
+      setList(transformedEvents);
+      updateHighlightedDays(transformedEvents, filter); // Atualizar os dias destacados com base nos eventos do funcionário encontrado
+    } else {
+      setEmployee(undefined);
+      setList([]);
+      setHighlightedDays([]); // Limpar os dias destacados se nenhum funcionário for encontrado
+    }
 
-  return foundEmployee;
-}
+    return foundEmployee;
+  }
 
   // Função para transformar e filtrar os eventos no tipo esperado usando o enum
   function transformEvents(events: { type: string, day: string }[]): Event[] {
@@ -132,7 +132,7 @@ function getEmployee(id: number): Employee | undefined {
 
   // Função para lidar com a pesquisa do funcionário
   function handleSearch() {
-    const foundEmployee = getEmployee(Number(searchId));
+    const foundEmployee = getEmployee(searchRf);
     if (!foundEmployee) {
       // Limpar o estado se nenhum funcionário for encontrado
       setEmployee(undefined);
@@ -193,8 +193,8 @@ function getEmployee(id: number): Employee | undefined {
         <div className={style.search}>
           <Input
             type="text"
-            placeholder="Digite o ID do funcionário"
-            value={searchId}
+            placeholder="Digite o RF do funcionário"
+            value={searchRf}
             onChange={handleSearchIdChange}
             className={style.input}
           />

@@ -2,7 +2,7 @@ export default class CalendarService {
     static get_employee() {
         return [
             {
-                id: 123, name: 'Lucas', events: [
+                rf: 'RF123', name: 'Lucas', events: [
                     {
                         type: 'present',
                         day: '28/07/2024'
@@ -26,7 +26,7 @@ export default class CalendarService {
                 ]
             },
             {
-                id: 231, name: 'João', events: [
+                rf: 'RF101', name: 'João', events: [
                     {
                         type: 'present',
                         day: '10/07/2024'

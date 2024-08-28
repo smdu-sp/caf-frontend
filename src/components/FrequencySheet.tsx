@@ -9,7 +9,7 @@ import Column from "@/interface/Column";
 export default function FrequencySheet() {
     const [searchId, setSearchId] = useState<string>('');
     const [employee, setEmployee] = useState<CompleteTableRow | undefined>();
-    const rows: CompleteTableRow[] = serviceTable.get_data_test();
+    const rows: CompleteTableRow[] = serviceTable.get_data();
     const columns_substitute: Column[] = serviceTable.get_sheet();
 
     // Função para lidar com a mudança no campo de pesquisa

@@ -1,46 +1,28 @@
 export default interface CompleteTableRow {
-    nomeCompleto: string;
     registroFuncional: string;
-    cpf: string;
-    nomeSocial?: string;
-    sexo: string;
-    racaCor: string;
-    grupoSanguineo?: string;
-    dataNascimento: Date;
-    pais: string;
-    possuidorDeficiencia: boolean;
-    tipoDeficiencia?: string;
-    uf: string;
-    cidade: string;
-    estadoCivil: string;
-    escolaridade: string;
-    nacionalidade: string;
-    numIdentidadeProfissional?: string;
-    conselhoIdentidadeProfissional?: string;
-    profissaoIdentidadeProfissional?: string;
-    dataExpedicaoIdentidadeProfissional?: Date;
-    especificacaoFormacao?: string;
-    anoChegadaBrasil?: number;
-    anoPrimeiroEmprego?: number;
-    existenciaCadastroCertidoes?: string;
-    endereco?: string;
-    cargoFuncao: string;
-    referenciaCargoFuncao: string;
-    provimentoCargoFuncao: string;
-    dataInicioCargoFuncao: Date;
-    dataExoneracaoCargoFuncao?: Date;
-    codigoUnidadeSIMPROC?: string;
-    codigoUnidadeSEI?: string;
-    cargoComissao?: string;
-    referenciaCargoComissao?: string;
-    dataInicioCargoComissao?: Date;
-    dataTerminoCargoComissao?: Date;
-    unidadeLotacaoCargoComissao?: string;
-    departamentoCoordenadoriaCargoComissao?: string;
-    provimentoCargas?: string;
-    cargosLivresOcupados?: string;
-    impedimentosLegais?: string;
-    dataInicioImpedimentosLegais?: Date;
-    dataTerminoImpedimentosLegais?: Date;
+    nome: string;	
+    vínculo: string;
+    espécie?: string;	
+    início?: Date;	
+    término?: Date;	
+    cargo?: string;	
+    nomecargo2?: string;	
+    ref?: string;	
+    unid?: number;	
+    nomesetor2?: string;	
+    rel_Jur_Adm?: string;
+    tipo_evento?: string;	
+    início_exerc?: Date;	
+    titular?: string;	
+    numvinc_tit?: string;	
+    nomefunc_tit?: string;	
+    início_rem?: Date;	
+    fim_rem?: Date;	
+    obs?: string;
+    vaga?: Date;
     [key: string]: any;
 }
+
+
+
+
