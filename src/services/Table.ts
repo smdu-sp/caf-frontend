@@ -2,6 +2,7 @@ import Column from '@/interface/Column';
 import CompleteTableRow from '@/interface/CompletTableRow'; 
 import * as XLSX from 'xlsx';
 import * as path from 'path';
+import { Row } from '@/interface/Row';
 
 export default class Data {
     // Atualizando a função createData para usar CompleteTableRow
@@ -52,6 +53,13 @@ export default class Data {
             vaga
         };
     }
+
+    static format_filter_rows(updatedFilteredRows: CompleteTableRow[]): Row[] {
+        return updatedFilteredRows.map(row => ({
+            nome: row.nome,
+            registroFuncional: row.registroFuncional,
+    }));
+}
     
     static get_columns_test():Column[] {
         return [

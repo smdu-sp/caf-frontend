@@ -8,7 +8,6 @@ import {
     Input,
     Button,
     Box,
-    Card,
     TabPanel
 } from '@mui/joy';
 import Tabs from '@mui/joy/Tabs';
