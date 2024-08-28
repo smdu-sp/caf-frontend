@@ -58,6 +58,7 @@ export default class Data {
         return updatedFilteredRows.map(row => ({
             nome: row.nome,
             registroFuncional: row.registroFuncional,
+            vínculo: row.vínculo,
     }));
 }
     
