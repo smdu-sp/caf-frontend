@@ -5,9 +5,22 @@ import * as XLSX from 'xlsx'
 export default class FrequencySheet {
 
     static async createAttendanceSheet(filePath: string): Promise<void> {
-        console.log('passou') 
-        const workbook = XLSX.readFile('portal/src/services/Pasta.xlsx');
-        console.log(workbook) 
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(await fs.openAsBlob('services/Pasta.xlsx'));
+        fileReader.onload = async (e) => {
+            if (e && e.target) {
+                const bufferArray = e.target.result;
+                const wb = XLSX.read(bufferArray, {
+                    type: "buffer"
+                });
+                const wsname = wb.SheetNames[0];
+                const ws = wb.Sheets[wsname];
+                const data = XLSX.utils.sheet_to_json(ws);
+                console.log(data);
+            } else {
+                console.log('Erro ao ler o arquivo');
+            }
+        }
       }
 
     static getColumns(): Column[] {
