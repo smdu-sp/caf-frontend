@@ -149,6 +149,7 @@ function SearchUsuarios() {
     'SUP': { label: 'Superadmin', value: 'SUP', color: 'primary' },
     'ADM': { label: 'Administrador', value: 'ADM', color: 'success' },
     'USR': { label: 'Usuário', value: 'USR', color: 'warning' },
+    'ELO': { label: 'Elo', value: 'ELO', color: 'warning' },
   }
 
   return (
@@ -232,6 +233,7 @@ function SearchUsuarios() {
             <Option value='TEC'>Técnicos</Option>
             <Option value='ADM'>Administrador</Option>
             <Option value='DEV'>Desenvolvedor</Option>
+            <Option value='ELO'>Elo</Option>
           </Select>
         </FormControl>
         <FormControl sx={{ flex: 1 }} size="sm">

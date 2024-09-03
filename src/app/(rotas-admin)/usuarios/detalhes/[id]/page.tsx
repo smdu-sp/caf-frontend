@@ -27,6 +27,7 @@ export default function UsuarioDetalhes(props: any) {
         'SUP': { label: 'Superadmin', value: 'SUP', color: 'primary' },
         'ADM': { label: 'Administrador', value: 'ADM', color: 'success' },
         'USR': { label: 'Usuário', value: 'USR', color: 'warning' },
+        'ELO': { label: 'Elo', value: 'ELO', color: 'warning' },
     }
 
     useEffect(() => {
