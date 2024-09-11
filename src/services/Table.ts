@@ -111,50 +111,8 @@ export default class Data {
         return `${day}/${month}/${year}`;
     }
     
-    static get_data(): CompleteTableRow[] {
-        const filePath = path.resolve(__dirname, 'db/db.xlsx');
-        console.log('Caminho do arquivo:', filePath);
-
-        try {
-            const workbook = XLSX.readFile(filePath);
-            console.log('Arquivo lido com sucesso:', workbook.SheetNames);
-
-            const sheetName = workbook.SheetNames[0];
-            const worksheet = workbook.Sheets[sheetName];
-
-            const jsonData: any[][] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
-            const rows: CompleteTableRow[] = jsonData.slice(1).map((row: any[]) => ({
-                registroFuncional: row[0],
-                nome: row[1],
-                vínculo: row[2],
-                espécie: row[3],
-                início: row[4] ? new Date(row[4]) : undefined,
-                término: row[5] ? new Date(row[5]) : undefined,
-                cargo: row[6],
-                nomecargo2: row[7],
-                ref: row[8],
-                unid: row[9],
-                nomesetor2: row[10],
-                rel_Jur_Adm: row[11],
-                tipo_evento: row[12],
-                início_exerc: row[13] ? new Date(row[13]) : undefined,
-                titular: row[14],
-                numvinc_tit: row[15],
-                nomefunc_tit: row[16],
-                início_rem: row[17] ? new Date(row[17]) : undefined,
-                fim_rem: row[18] ? new Date(row[18]) : undefined,
-                obs: row[19],
-                vaga: row[20] ? new Date(row[20]) : undefined
-            }));
-
-            console.log(rows)
-
-            return rows;
-        } catch (error) {
-            console.error('Erro ao ler o arquivo:', error);
-            return [];
-        }
+    static get_data() {
+        return false
     }
 
     static get_columns_substitute():Column[] {

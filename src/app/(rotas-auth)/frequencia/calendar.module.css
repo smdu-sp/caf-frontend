@@ -65,3 +65,14 @@
     margin-top: 10px;
     margin-bottom: 0;
 }
+
+.paper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.paper_content {
+    display: flex;
+    flex-direction: column;
+}

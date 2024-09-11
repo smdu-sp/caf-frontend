@@ -14,20 +14,6 @@ export default function Frequencia() {
     setTabValue(newValue);
   };
 
-  React.useEffect(() => {
-    const criarFolha = async () => {
-      try {
-        await Service.createAttendanceSheet('./src/assets/Pasta.xlsx');
-        setFolhaValor(1); 
-      } catch (error) {
-        console.error('Erro ao criar folha de ponto:', error);
-        setFolhaValor(-1); 
-      }
-    };
-
-    criarFolha();
-  }, []);
-
   return (
     <Content titulo="Página de frequência" pagina="/frequencia">
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -45,9 +31,6 @@ export default function Frequencia() {
         {tabValue === 1 && (
           <Box sx={{ p: 3 }}>
             <FrequencySheet />
-            {folhaValor === 0 && <p>Criando folha de ponto...</p>}
-            {folhaValor === 1 && <p>Folha de ponto criada com sucesso!</p>}
-            {folhaValor === -1 && <p>Erro ao criar a folha de ponto.</p>}
           </Box>
         )}
       </Box>
