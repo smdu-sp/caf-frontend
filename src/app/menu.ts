@@ -1,4 +1,5 @@
-import { CalendarMonth, Home, Person, Payments, Event, Notifications } from '@mui/icons-material';
+import { CalendarMonth, Home, Person, Payments, Event, Notifications, Storage } from '@mui/icons-material';
+
 
 export interface IMenuOption {
     title:  string;
@@ -32,7 +33,13 @@ export const menu: IMenu = {
             href: '/notifica',
             name: 'notifica',
             icon: Notifications,
-        }   
+        },
+        {
+            title: 'Database',
+            href: '/database',
+            name: '/database',
+            icon: Storage,
+        }
     ],
     adminOptions: [
         {
