@@ -8,6 +8,6 @@ export default async function RotasAdmin({children}:{children: React.ReactNode})
   const session = await getServerSession(authOptions);
   if (!session) redirect('/login');
   const usuario: IUsuario = await usuarioServices.validaUsuario();
-  if (['USR'].includes(usuario.permissao)) redirect('/');
+  if (['USR', 'ELO'].includes(usuario.permissao)) redirect('/');
   return <>{children}</>;
 }

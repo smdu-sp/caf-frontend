@@ -1,0 +1,12 @@
+.buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.button_upload {
+    margin-bottom: 10px;
+}
+
+.button_submit{
+    margin-bottom: 10px;
+}

@@ -1,4 +1,4 @@
-import { CalendarMonth, Home, Person, Payments, Event, Notifications, Storage } from '@mui/icons-material';
+import { CalendarMonth, Home, Person, Event, TableChart, Storage } from '@mui/icons-material';
 
 
 export interface IMenuOption {
@@ -23,17 +23,17 @@ export const menu: IMenu = {
             icon: Home,
         },
         {
-            title: 'Pagamento',
-            href: '/pagamento',
-            name: 'pagamento',
-            icon: Payments,
+            title: 'Tabela',
+            href: '/tabela',
+            name: '/tabela',
+            icon: TableChart,
         },
-        {
-            title: 'Notificações',
-            href: '/notifica',
-            name: 'notifica',
-            icon: Notifications,
-        },
+        // {
+        //     title: 'Notificações',
+        //     href: '/notifica',
+        //     name: 'notifica',
+        //     icon: Notifications,
+        // },
         {
             title: 'Database',
             href: '/database',

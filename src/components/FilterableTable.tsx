@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, MouseEvent, KeyboardEvent, FocusEvent, MouseEventHandler } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, MouseEvent, KeyboardEvent, FocusEvent } from 'react';
 import {
     Sheet,
     Table,
@@ -14,11 +14,10 @@ import {
 import Tabs from '@mui/joy/Tabs';
 import TabList from '@mui/joy/TabList';
 import Tab from '@mui/joy/Tab';
-import { PieChart } from '@mui/x-charts/PieChart';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Pagination from '@mui/material/Pagination';
-import style from '@/app/(rotas-auth)/pagamento/style.module.css';
+import style from '@/app/(rotas-auth)/tabela/style.module.css';
 import Service from '@/services/Table';
 import DownloadService from '@/services/Download';
 import CompleteTableRow from '@/interface/CompletTableRow';
@@ -57,20 +56,27 @@ const FilterableTable = ({ title, description, columns, rows }: FilterableTableP
         });
     };
 
-    const handleColumnSelectChange = (event: MouseEvent<Element, any> | KeyboardEvent<Element> | FocusEvent<Element, Element> | null, value: unknown) => {
+    const handleColumnSelectChange = (
+        event: MouseEvent<Element> | KeyboardEvent | FocusEvent<Element> | null, 
+        value: unknown
+    ) => {
         const selectedValue = value as string;
         setSelectedColumn(selectedValue);
-
+    
         setFilters(filters => filters.map((filter, index) => (
             index === filters.length - 1
                 ? { ...filter, column: selectedValue }
                 : filter
         )));
     };
-
-    const handleDownloadSelectChange = (event: MouseEvent<Element, any> | KeyboardEvent<Element> | FocusEvent<Element, Element> | null, value: unknown) => {
+    
+    const handleDownloadSelectChange = (
+        event: MouseEvent<Element> | KeyboardEvent | FocusEvent<Element> | null, 
+        value: unknown
+    ) => {
         setDownloadSelect(value as string);
     };
+    
 
     const addNewFilter = () => {
         setFilters(filters => [...filters, { column: selectedColumn, value: '' }]);
@@ -109,12 +115,11 @@ const FilterableTable = ({ title, description, columns, rows }: FilterableTableP
 
     const handleDownloadClick = () => {
         const formattedRows = Service.format_filter_rows(filteredRows);
-
-        // if (downloadSelect === 'CSV') {
-        //     DownloadService.downloadCSV(formattedRows, columns.map(col => col.header), 'tabela_filtrada_pagamentos.csv');
-        // } else if (downloadSelect === 'XLSX') {
-        //     DownloadService.downloadXLSX(formattedRows, 'tabela_filtrada_pagamentos.xlsx');
-        // }
+        if (downloadSelect === 'CSV') {
+            DownloadService.downloadCSV(formattedRows, columns.map(col => col.header), 'tabela_filtrada_pagamentos.csv');
+        } else if (downloadSelect === 'XLSX') {
+            DownloadService.downloadXLSX(formattedRows, 'tabela_filtrada_pagamentos.xlsx');
+        }
     };
 
     const calculatePercentage = (condition: (item: CompleteTableRow) => boolean): number => {
@@ -218,8 +223,6 @@ const FilterableTable = ({ title, description, columns, rows }: FilterableTableP
                                         </tr>
                                     ))}
                                 </tbody>
-
-
                             </Table>
                         </Sheet>
                     </div>

@@ -120,6 +120,10 @@ async function criar(data: ICreateUsuario): Promise<IUsuario> {
     return criado;
 }
 
+async function pegarSessaoUsuario() {
+    return await getServerSession(authOptions);
+}
+
 async function atualizar(id: string, data: IUpdateUsuario): Promise<IUsuario> {
     const session = await getServerSession(authOptions);
     const autorizado = await fetch(`${baseURL}usuarios/atualizar/${id}`, {
@@ -139,6 +143,22 @@ async function atualizar(id: string, data: IUpdateUsuario): Promise<IUsuario> {
 async function desativar(id: string): Promise<{ desativado: boolean }> {
     const session = await getServerSession(authOptions);
     const desativado = await fetch(`${baseURL}usuarios/desativar/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.access_token}`
+        }
+    }).then((response) => {
+        if (response.status === 401) Logout();
+        if (response.status !== 200) return;
+        return response.json();
+    });
+    return desativado;
+}
+
+async function desativarAll(): Promise<{ desativado: boolean }> {
+    const session = await getServerSession(authOptions);
+    const desativado = await fetch(`${baseURL}usuarios/desativar/`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
@@ -187,6 +207,8 @@ async function buscarNovo(login: string): Promise<{ id?: string, login?: string,
 }
 
 export { 
+    desativarAll,
+    pegarSessaoUsuario,
     atualizar,
     autorizar,
     buscarNovo,
